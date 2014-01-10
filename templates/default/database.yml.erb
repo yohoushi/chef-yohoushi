@@ -1,0 +1,9 @@
+production:
+  adapter: <%= node[:yohoushi][:database][:adapter] %>
+  database: <%= node[:yohoushi][:database][:name] %>
+  pool: <%= node[:yohoushi][:database][:pool] %>
+  timeout: <%= node[:yohoushi][:database][:timeout] %>
+  username: <%= node[:yohoushi][:database][:username] %>
+  password: <%= node[:yohoushi][:database][:password] %>
+  host: <%= node[:yohoushi][:database][:host] %>
+  port: <%= node[:yohoushi][:database][:port] %>
