@@ -1,23 +1,28 @@
-chef-yohoushi Cookbook
-======================
+# chef-yohoushi Cookbook
 
 [Chef](http://www.getchef.com/chef/) cookbook for [Yohoushi](http://yohoushi.github.io/yohoushi/).
 
 Create a database and a database user for yohoushi, and install yohoushi.
 
 Requirements
-------------
 
-#### packages
+## Cookbook dependencies
 
-##### This cookbook depends on several OpsCode cookbooks, namely
+This cookbook depends on several OpsCode cookbooks, namely
 
 * git
 * database
 
-#### ruby
+## Middleware dependencies
 
-Installing ruby is not included in this cookbook. Please install ruby(>= 2.0.0) before run this recipe.
+This cookbook does not install the following packages, so please install them by other recipes.
+
+* ruby (required >= 2.0.0)
+* MySQL Server
+* GrowthForecast
+
+#### MySQL
+
 
 Attributes
 ----------
