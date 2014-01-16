@@ -14,9 +14,9 @@ Yohoushi requires followings, but this cookbook does not install them. Please in
 
 ## Usage
 
-### Install Yohoushi on localhost with cookbook
+### Install Yohoushi on localhost
 
-Assume (You may configure at [attributes/default.rb](attributes/default.rb))
+Assume (You can configure at [attributes/default.rb](attributes/default.rb))
 
 * Your username is `vagrant` and yohoushi will be installed to `/home/vagrant/yohoushi`
 * Ruby is already installed on `/home/vagrant/.rbenv/versions/2.1.0/bin/ruby` with rbenv
@@ -43,11 +43,11 @@ See [Yohoushi manual page](http://yohoushi.github.io/yohoushi/) for further deta
 
 ### Install Yohoushi to a remote host
 
-Assume (You may configure at [attributes/default.rb](attributes/default.rb))
+Assume (You can configure at [attributes/default.rb](attributes/default.rb))
 
 * Your username at remote host is `vagrant` and yohoushi will be installed to `/home/vagrant/yohoushi`
 * Ruby is already installed on `/home/vagrant/.rbenv/versions/2.1.0/bin/ruby` with rbenv
-* Mysql is already working on localhost:3306 with empty root password
+* Mysql is already working on port 3306 with empty root password
 
 Then, install by 
 
@@ -168,6 +168,11 @@ Attributes
   </tr>
 </table>
 
+ToDo
+----
+
+* Enable to install ruby, mysql, and GrowthForecast if users set `integration` option
+
 Contributing
 ------------
 
@@ -181,4 +186,4 @@ Contributing
 License and Authors
 -------------------
 License: MIT
-Authors: Nobuhiro Nikushi
+Authors: Nobuhiro Nikushi, Naotoshi Seo
