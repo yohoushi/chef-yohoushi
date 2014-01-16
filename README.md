@@ -1,28 +1,93 @@
-# chef-yohoushi Cookbook
+# Yohoushi Cookbook
 
 [Chef](http://www.getchef.com/chef/) cookbook for [Yohoushi](http://yohoushi.github.io/yohoushi/).
 
-Create a database and a database user for yohoushi, and install yohoushi.
+Create a database and a database user on MySQL for yohoushi, and install yohoushi.
 
-Requirements
+## Middleware Requirements
 
-## Cookbook dependencies
+Yohoushi requires followings, but this cookbook does not install them. Please install them by other recipes or manually.
 
-This cookbook depends on several OpsCode cookbooks, namely
+* Ruby (>=2.0.0)
+* MySQL or Sqlite3 (>=3.6.16)
+* GrowthForecast (>=0.62)
 
-* git
-* database
+## Usage
 
-## Middleware dependencies
+### Install Yohoushi on localhost with cookbook
 
-This cookbook does not install the following packages, so please install them by other recipes.
+Assume (You may configure at [attributes/default.rb](attributes/default.rb))
 
-* ruby (required >= 2.0.0)
-* MySQL Server
-* GrowthForecast
+* Your username is `vagrant` and yohoushi will be installed to `/home/vagrant/yohoushi`
+* Ruby is already installed on `/home/vagrant/.rbenv/versions/2.1.0/bin/ruby` with rbenv
+* Mysql is already working on localhost:3306 with empty root password
 
-#### MySQL
+Then, install yohoushi by
 
+```bash
+git clone https://github.com/yohoushi/chef-yohoushi ~/chef-yohoushi
+cd ~/chef-yohoushi
+bundle install
+bundle exec knife solo cook localhost
+```
+
+and start yohoushi as
+
+```bash
+cd ~/yohoushi
+rbenv local 2.1.0
+bin/yohoushi
+```
+
+See [Yohoushi manual page](http://yohoushi.github.io/yohoushi/) for further details.
+
+### Install Yohoushi to a remote host
+
+Assume (You may configure at [attributes/default.rb](attributes/default.rb))
+
+* Your username at remote host is `vagrant` and yohoushi will be installed to `/home/vagrant/yohoushi`
+* Ruby is already installed on `/home/vagrant/.rbenv/versions/2.1.0/bin/ruby` with rbenv
+* Mysql is already working on localhost:3306 with empty root password
+
+Then, install by 
+
+```bash
+HOSTNAME="YOUR_REMOTE_HOSTNAME"
+git clone https://github.com/yohoushi/chef-yohoushi ~/chef-yohoushi
+cd ~/chef-yohoushi
+bundle install
+# bundle exec berks install --path cookbooks
+cp nodes/localhost.json nodes/$HOSTNAME.json
+bundle exec knife solo prepare $HOSTNAME
+bundle exec knife solo cook $HOSTNAME
+```
+
+and start yohoushi as
+
+```bash
+ssh $HOSTNAME
+ssh> cd ~/yohoushi
+ssh> rbenv local 2.1.0
+ssh> bin/yohoushi
+```
+
+See [Yohoushi manual page](http://yohoushi.github.io/yohoushi/) for further details.
+
+### Use as a community cookbook
+
+Use [Berkshelf](http://berkshelf.com/), and append below to your Berksfile
+
+```
+cookbook 'yohoushi', git: 'https://github.com/yohoushi/chef-yohoushi'
+```
+
+To run yohoushi recipe; add a run_list to your node.json
+
+```
+"run_list": [
+  "yohoushi"
+]
+```
 
 Attributes
 ----------
@@ -36,40 +101,34 @@ Attributes
     <th>Default</th>
   </tr>
   <tr>
+    <td>yohoushi/app/owner</tt></td>
+    <td>String</td>
+    <td>user name to own files</td>
+    <td><tt>vagrant</tt></td>
+  </tr>
+  <tr>
+    <td>yohoushi/app/group</tt></td>
+    <td>String</td>
+    <td>group name to own files</td>
+    <td><tt>vagrant</tt></td>
+  </tr>
+  <tr>
     <td>yohoushi/app/path</tt></td>
     <td>String</td>
     <td>where the application is deployed to</td>
-    <td><tt>/usr/local/yohoushi</tt></td>
+    <td><tt>/home/vagrant/yohoushi</tt></td>
   </tr>
   <tr>
     <td>yohoushi/ruby/ruby_path</tt></td>
     <td>String</td>
     <td>path to ruby command (is required >= 2.0.0) </td>
-    <td><tt>/opt/rbenv/versions/2.1.0/bin/ruby</tt></td>
+    <td><tt>/home/vagrant/.rbenv/versions/2.1.0/bin/ruby</tt></td>
   </tr>
   <tr>
     <td>yohoushi/ruby/gem_path</tt></td>
     <td>String</td>
     <td>path to gem command</td>
-    <td><tt>/opt/rbenv/versions/2.1.0/bin/gem</tt></td>
-  </tr>
-  <tr>
-    <td>yohoushi/owner</tt></td>
-    <td>String</td>
-    <td>user name to own files and processes</td>
-    <td><tt>yohoushi</tt></td>
-  </tr>
-  <tr>
-    <td>yohoushi/group</tt></td>
-    <td>String</td>
-    <td>group name to own files and processes</td>
-    <td><tt>yohoushi</tt></td>
-  </tr>
-  <tr>
-    <td>yohoushi/packages</tt></td>
-    <td>Array</td>
-    <td>Additional packages to be installed before install yohoushi</td>
-    <td><tt>mysql-devel</tt></td>
+    <td><tt>/home/vagrant/.rbenv/versions/2.1.0/bin/gem</tt></td>
   </tr>
   <tr>
     <td>yohoushi/database/name</tt></td>
@@ -108,31 +167,6 @@ Attributes
     <td><tt>3306</tt></td>
   </tr>
 </table>
-
-Usage
------
-#### yohoushi::default
-
-1. Include `yohoushi` in your node's `run_list`
-2. Set `yohoushi/database/root_password`
-
-Example:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[yohoushi]"
-  ],
-  "yohoushi": {
-    "database": { "root_password": "mypass" },
-    "ruby": {
-      "ruby_path": "/usr/local/ruby/bin/ruby",
-      "gem_path": "/usr/local/ruby/bin/gem"
-    }
-  }
-}
-```
 
 Contributing
 ------------
